@@ -1,1 +1,1 @@
-export const LOCAL_API_URL = 'https://api.aiorhumangame.com';
+export const LOCAL_API_URL = 'http://192.168.0.3:3000';
