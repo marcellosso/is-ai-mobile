@@ -1,23 +1,15 @@
 import Fontisto from '@expo/vector-icons/Fontisto';
 import * as Clipboard from 'expo-clipboard';
 import { FC, useMemo } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  Image,
-  SafeAreaView,
-  FlatList,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native';
 import Modal from 'react-native-modal';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Toast, { BaseToast } from 'react-native-toast-message';
 
+import AnswersBarChart from './bar-chart';
 import { getLevelAnswerPercentage } from '../helpers/Game';
 import { ImageClass } from '../helpers/ImagesClass';
 import { Level, PreviousAnswerLevel } from '../types/level';
-import AnswersBarChart from './bar-chart';
 
 const toastConfig = {
   success: (props: any) => (
@@ -34,7 +26,8 @@ const toastConfig = {
         width: '20%',
       }}
       text1Style={{
-        fontSize: RFPercentage(2.5),
+        fontSize: RFPercentage(2),
+        alignSelf: 'center',
         fontWeight: '500',
         color: '#393E46',
       }}
@@ -76,7 +69,7 @@ const EndGameModal: FC<IEndGameModal> = ({
   const showShareToast = () => {
     Toast.show({
       type: 'success',
-      text1: 'Copied!',
+      text1: 'Copied to clipboard!',
     });
   };
 
@@ -101,15 +94,37 @@ const EndGameModal: FC<IEndGameModal> = ({
       backdropOpacity={0.9}
       onBackButtonPress={closeModal}
       onBackdropPress={closeModal}
-      swipeDirection={['down', 'left', 'right', 'up']}
+      swipeDirection={['left', 'right']}
       onSwipeComplete={closeModal}>
       <View style={styles.container}>
         <Text style={styles.headerText}>You score: {currentScore}</Text>
-        <SafeAreaView style={styles.answersContainer}>
+        <Text style={[styles.headerText, { fontSize: RFPercentage(3) }]}>Global Answers</Text>
+        <View
+          style={{
+            width: '100%',
+            alignItems: 'center',
+            justifyContent: 'center',
+            display: 'flex',
+            flexDirection: 'row',
+          }}>
+          <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <Text style={{ color: '#FFD369' }}>AI</Text>
+            <View style={{ width: 10, height: 10, backgroundColor: '#FFD369', marginLeft: 5 }} />
+          </View>
+          <View style={{ flexDirection: 'row', alignItems: 'center', marginLeft: 10 }}>
+            <Text style={{ color: 'rgb(226 232 240)' }}>HUMAN</Text>
+            <View
+              style={{ width: 10, height: 10, backgroundColor: 'rgb(226 232 240)', marginLeft: 5 }}
+            />
+          </View>
+        </View>
+        <View style={styles.answersContainer}>
           <FlatList
             data={previousAnswers}
+            style={{ height: '50%' }}
+            scrollEnabled
             showsVerticalScrollIndicator={false}
-            keyExtractor={(item) => item.levelId}
+            keyExtractor={(item, idx) => item.levelId + idx}
             renderItem={({ item }) => {
               const levelId = item.levelId;
               const level = levels.find((level) => level._id === levelId) as Level;
@@ -118,7 +133,7 @@ const EndGameModal: FC<IEndGameModal> = ({
                 getLevelAnswerPercentage(level);
 
               return (
-                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                <View style={styles.barLevelContainer}>
                   <Image
                     style={styles.levelImage}
                     source={ImageClass.GetImage(level?.image_name)}
@@ -131,7 +146,7 @@ const EndGameModal: FC<IEndGameModal> = ({
               );
             }}
           />
-        </SafeAreaView>
+        </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.button, styles.buttonShare]} onPress={copyToClipboard}>
             <View style={styles.buttonTextContainer}>
@@ -154,9 +169,9 @@ const EndGameModal: FC<IEndGameModal> = ({
 
 const styles = StyleSheet.create({
   container: {
-    width: '80%',
+    width: '85%',
     borderRadius: 10,
-    height: '50%',
+    height: '65%',
     alignSelf: 'center',
     display: 'flex',
     backgroundColor: '#222831',
@@ -166,16 +181,22 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3,
     elevation: 3,
-    padding: 5,
+    padding: RFPercentage(2),
+  },
+  barLevelContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    width: '100%',
+    marginTop: '3%',
   },
   answersContainer: {
     flex: 1,
     width: '100%',
+    overflow: 'scroll',
   },
   levelImage: {
     width: 50,
     height: 50,
-    marginBottom: '3%',
   },
   headerText: {
     color: '#FFD369',
@@ -186,17 +207,17 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
     alignItems: 'center',
-    marginTop: '20%',
+    marginTop: 10,
   },
   button: {
     borderWidth: 4,
     borderRadius: 5,
-    width: '70%',
+    width: '100%',
     paddingVertical: '3%',
     paddingHorizontal: '15%',
     alignItems: 'center',
     alignContent: 'center',
-    marginBottom: 0,
+    marginBottom: 2,
     marginTop: 0,
   },
   buttonShare: {
