@@ -1,16 +1,19 @@
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
+import { RFPercentage } from 'react-native-responsive-fontsize';
 
-const ImageFrame = () => {
+const ImageFrame = ({ currentScore }: { currentScore: number }) => {
   return (
     <View style={styles.imageFrameContainer}>
-      <View style={styles.imageFrameShape} />
+      <View style={styles.imageFrameShape}>
+        <Text style={styles.scoreText}>{currentScore}</Text>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   imageFrameContainer: {
-    height: '5%',
+    height: '12%',
     width: '100%',
     display: 'flex',
     alignItems: 'center',
@@ -31,6 +34,13 @@ const styles = StyleSheet.create({
     borderRightWidth: 5,
     borderLeftWidth: 5,
     borderColor: '#eee',
+    justifyContent: 'center',
+  },
+  scoreText: {
+    color: '#393E46',
+    fontWeight: '900',
+    fontSize: RFPercentage(4),
+    textAlign: 'center',
   },
 });
 

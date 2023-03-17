@@ -1,16 +1,17 @@
 import api from './api';
-import { PreviousAnswerLevel } from '../types/level';
+import { Level, PreviousAnswerLevel } from '../types/level';
 
 const LEVEL_ENDPOINT = '/info';
 
-export const getAllLevels = async () => {
+export const getAllLevels = async (): Promise<Level[]> => {
   try {
     const res = await api.get(`${LEVEL_ENDPOINT}/`);
-    const levels = res.data;
+    const levels = res.data as Level[];
 
     return levels;
   } catch (err) {
     console.log(err);
+    return [];
   }
 };
 
