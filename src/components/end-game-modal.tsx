@@ -1,12 +1,23 @@
 import Fontisto from '@expo/vector-icons/Fontisto';
 import * as Clipboard from 'expo-clipboard';
 import { FC, useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Image,
+  SafeAreaView,
+  FlatList,
+} from 'react-native';
 import Modal from 'react-native-modal';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Toast, { BaseToast } from 'react-native-toast-message';
 
-import { Level } from '../types/level';
+import { getLevelAnswerPercentage } from '../helpers/Game';
+import { ImageClass } from '../helpers/ImagesClass';
+import { Level, PreviousAnswerLevel } from '../types/level';
+import AnswersBarChart from './bar-chart';
 
 const toastConfig = {
   success: (props: any) => (
@@ -34,6 +45,7 @@ const toastConfig = {
 interface IEndGameModal {
   currentScore: number;
   levels: Level[];
+  previousAnswers: PreviousAnswerLevel[];
   openFinishGameModal: boolean;
   endGameTrigger: () => void;
   setOpenFinishGameModal: (_v: boolean) => void;
@@ -42,6 +54,7 @@ interface IEndGameModal {
 const EndGameModal: FC<IEndGameModal> = ({
   currentScore,
   levels,
+  previousAnswers,
   openFinishGameModal,
   endGameTrigger,
   setOpenFinishGameModal,
@@ -63,7 +76,7 @@ const EndGameModal: FC<IEndGameModal> = ({
   const showShareToast = () => {
     Toast.show({
       type: 'success',
-      text1: 'Copied to clipboard',
+      text1: 'Copied!',
     });
   };
 
@@ -92,6 +105,33 @@ const EndGameModal: FC<IEndGameModal> = ({
       onSwipeComplete={closeModal}>
       <View style={styles.container}>
         <Text style={styles.headerText}>You score: {currentScore}</Text>
+        <SafeAreaView style={styles.answersContainer}>
+          <FlatList
+            data={previousAnswers}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item) => item.levelId}
+            renderItem={({ item }) => {
+              const levelId = item.levelId;
+              const level = levels.find((level) => level._id === levelId) as Level;
+
+              const { percentageAnsweredAi, percentageAnsweredHuman } =
+                getLevelAnswerPercentage(level);
+
+              return (
+                <View style={{ display: 'flex', flexDirection: 'row' }}>
+                  <Image
+                    style={styles.levelImage}
+                    source={ImageClass.GetImage(level?.image_name)}
+                  />
+                  <AnswersBarChart
+                    aiPercentage={percentageAnsweredAi}
+                    humanPercentage={percentageAnsweredHuman}
+                  />
+                </View>
+              );
+            }}
+          />
+        </SafeAreaView>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.button, styles.buttonShare]} onPress={copyToClipboard}>
             <View style={styles.buttonTextContainer}>
@@ -116,7 +156,7 @@ const styles = StyleSheet.create({
   container: {
     width: '80%',
     borderRadius: 10,
-    height: '30%',
+    height: '50%',
     alignSelf: 'center',
     display: 'flex',
     backgroundColor: '#222831',
@@ -126,6 +166,16 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.5,
     shadowRadius: 3,
     elevation: 3,
+    padding: 5,
+  },
+  answersContainer: {
+    flex: 1,
+    width: '100%',
+  },
+  levelImage: {
+    width: 50,
+    height: 50,
+    marginBottom: '3%',
   },
   headerText: {
     color: '#FFD369',

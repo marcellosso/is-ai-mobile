@@ -15,7 +15,7 @@ import { Level, LEVEL_TYPE_ENUM } from '../types/level';
 const GameScreen = () => {
   const [levels, setLevels] = useState<Level[]>([]);
   const [loading, setLoading] = useState(false);
-  const [openFinishGameModal, setOpenFinishGameModal] = useState(false);
+  const [openFinishGameModal, setOpenFinishGameModal] = useState(true);
 
   useEffect(() => {
     const pullLevels = async () => {
@@ -27,7 +27,7 @@ const GameScreen = () => {
     pullLevels();
   }, []);
 
-  const { currentScore, currentLevel, handleAnswer, handleEndGame } = useGame(
+  const { currentScore, currentLevel, previousAnswers, handleAnswer, handleEndGame } = useGame(
     levels,
     setOpenFinishGameModal
   );
@@ -49,6 +49,24 @@ const GameScreen = () => {
         <EndGameModal
           currentScore={currentScore}
           levels={levels}
+          previousAnswers={[
+            {
+              levelId: '640b5aa39b420888f8fa3f1b',
+              answer: LEVEL_TYPE_ENUM.AI,
+            },
+            {
+              levelId: '640b5aa39b420888f8fa3f21',
+              answer: LEVEL_TYPE_ENUM.AI,
+            },
+            {
+              levelId: '640b5aa39b420888f8fa3f4e',
+              answer: LEVEL_TYPE_ENUM.AI,
+            },
+            {
+              levelId: '640b5aa39b420888f8fa3f4d',
+              answer: LEVEL_TYPE_ENUM.HUMAN,
+            },
+          ]}
           openFinishGameModal={openFinishGameModal}
           setOpenFinishGameModal={setOpenFinishGameModal}
           endGameTrigger={handleEndGame}

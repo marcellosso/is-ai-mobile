@@ -17,12 +17,6 @@ const styles = StyleSheet.create({
     width: '100%',
     display: 'flex',
     alignItems: 'center',
-
-    shadowColor: '#eee',
-    shadowOffset: { width: 5, height: 0 },
-    shadowOpacity: 0.5,
-    shadowRadius: 3,
-    elevation: 3,
   },
   imageFrameShape: {
     backgroundColor: '#FFD369',
@@ -35,6 +29,12 @@ const styles = StyleSheet.create({
     borderLeftWidth: 5,
     borderColor: '#eee',
     justifyContent: 'center',
+
+    shadowColor: '#eee',
+    shadowOffset: { width: 5, height: 0 },
+    shadowOpacity: 0.5,
+    shadowRadius: 3,
+    elevation: 3,
   },
   scoreText: {
     color: '#393E46',
