@@ -14,7 +14,7 @@ const Layout = ({ children }: ILayout) => {
         style={styles.image}>
         <View style={styles.contentContainer}>
           {children}
-          <StatusBar style="light" />
+          <StatusBar style="light" backgroundColor="rgba(34,40,49, 0.95)" />
         </View>
       </ImageBackground>
     </View>

@@ -11,7 +11,9 @@
       "resizeMode": "contain",
       "backgroundColor": "#222831"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.mitha.isaigame",
@@ -27,6 +29,11 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "0374982b-3835-444e-80a8-d92fc441ed14"
+      }
     }
   }
 }

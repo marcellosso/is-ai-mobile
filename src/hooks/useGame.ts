@@ -46,12 +46,12 @@ const useGame = (levels: Level[], setFinishedGameModal: (_v: boolean) => void) =
   };
 
   const handleEndGame = () => {
+    navigation.navigate('Home');
+
     if (currentScore > highestScoreClientState) updateHighScore();
     setCurrentScore(0);
     updateAnswers(previousAnswers);
     setCurrentLevel(getRandomLevel());
-
-    navigation.navigate('Home');
   };
 
   const updateHighScore = async () => {

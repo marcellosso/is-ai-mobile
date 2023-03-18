@@ -25,6 +25,7 @@ const styles = StyleSheet.create({
     marginLeft: 5,
     overflow: 'hidden',
     flexDirection: 'row',
+    height: 50,
   },
   aiPercentageContainer: {
     display: 'flex',

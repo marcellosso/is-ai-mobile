@@ -1,7 +1,7 @@
 import Fontisto from '@expo/vector-icons/Fontisto';
 import * as Clipboard from 'expo-clipboard';
 import { FC, useMemo } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, Image, FlatList } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, Image, ScrollView } from 'react-native';
 import Modal from 'react-native-modal';
 import { RFPercentage } from 'react-native-responsive-fontsize';
 import Toast, { BaseToast } from 'react-native-toast-message';
@@ -18,17 +18,13 @@ const toastConfig = {
       style={{
         backgroundColor: '#FFD369',
         borderLeftWidth: 0,
-        width: '50%',
-      }}
-      contentContainerStyle={{
-        paddingHorizontal: 5,
-        paddingVertical: 2,
-        width: '20%',
+        width: '55%',
       }}
       text1Style={{
         fontSize: RFPercentage(2),
         alignSelf: 'center',
-        fontWeight: '500',
+        justifyContent: 'center',
+        fontWeight: '800',
         color: '#393E46',
       }}
     />
@@ -53,8 +49,8 @@ const EndGameModal: FC<IEndGameModal> = ({
   setOpenFinishGameModal,
 }) => {
   const closeModal = () => {
-    endGameTrigger();
     setOpenFinishGameModal(false);
+    endGameTrigger();
   };
 
   const emojiGetter = () => {
@@ -93,9 +89,7 @@ const EndGameModal: FC<IEndGameModal> = ({
       backdropColor="rgb(34,40,49)"
       backdropOpacity={0.9}
       onBackButtonPress={closeModal}
-      onBackdropPress={closeModal}
-      swipeDirection={['left', 'right']}
-      onSwipeComplete={closeModal}>
+      onBackdropPress={closeModal}>
       <View style={styles.container}>
         <Text style={styles.headerText}>You score: {currentScore}</Text>
         <Text style={[styles.headerText, { fontSize: RFPercentage(3) }]}>Global Answers</Text>
@@ -119,21 +113,14 @@ const EndGameModal: FC<IEndGameModal> = ({
           </View>
         </View>
         <View style={styles.answersContainer}>
-          <FlatList
-            data={previousAnswers}
-            style={{ height: '50%' }}
-            scrollEnabled
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item, idx) => item.levelId + idx}
-            renderItem={({ item }) => {
+          <ScrollView showsVerticalScrollIndicator={false}>
+            {previousAnswers.map((item, idx) => {
               const levelId = item.levelId;
               const level = levels.find((level) => level._id === levelId) as Level;
-
               const { percentageAnsweredAi, percentageAnsweredHuman } =
                 getLevelAnswerPercentage(level);
-
               return (
-                <View style={styles.barLevelContainer}>
+                <View key={item.levelId + idx} style={styles.barLevelContainer}>
                   <Image
                     style={styles.levelImage}
                     source={ImageClass.GetImage(level?.image_name)}
@@ -144,8 +131,8 @@ const EndGameModal: FC<IEndGameModal> = ({
                   />
                 </View>
               );
-            }}
-          />
+            })}
+          </ScrollView>
         </View>
         <View style={styles.buttonContainer}>
           <TouchableOpacity style={[styles.button, styles.buttonShare]} onPress={copyToClipboard}>
