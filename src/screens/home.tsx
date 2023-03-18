@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useNavigation } from '@react-navigation/native';
+import { useIsFocused, useNavigation } from '@react-navigation/native';
 import { useState, useEffect } from 'react';
 import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { RFPercentage } from 'react-native-responsive-fontsize';
@@ -9,6 +9,7 @@ import { HomeScreenNavigationProp } from '../types/navigation';
 
 const HomeScreen = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
+  const focused = useIsFocused();
 
   const [highScore, setHighScore] = useState('0');
 
@@ -18,8 +19,8 @@ const HomeScreen = () => {
       setHighScore(highestScore);
     };
 
-    fetchHighestScore();
-  }, []);
+    if (focused) fetchHighestScore();
+  }, [focused]);
 
   return (
     <Layout>
